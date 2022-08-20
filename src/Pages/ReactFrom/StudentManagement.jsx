@@ -3,19 +3,27 @@ import { connect } from "react-redux";
 import FormStudent from "./FormStudent";
 import TableReact from "./TableReact";
 
-
 class StudentManagement extends Component {
   state = {
-    studentInfo:{
-      
-    }
-  }
+    studentInfo: {
+      id: "",
+      name: "",
+      phoneNumber: "",
+      email: "",
+    },
+    studentEdit: {
+      id: "",
+      name: "",
+      phoneNumber: "",
+      email: "",
+    },
+  };
   render() {
     return (
       <div className="container">
         <h3>Quản lý sinh viên</h3>
         <div className="mb-4">
-          <FormStudent/>
+          <FormStudent />
         </div>
         <TableReact />
       </div>

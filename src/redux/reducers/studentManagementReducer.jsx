@@ -1,22 +1,16 @@
 const stateDefault = {
-  studentInfo: {
-    id: "",
-    name: "",
-    phoneNumber: "",
-    email: "",
-  },
-  errors: {
-    id: "",
-    name: "",
-    phoneNumber: "",
-    email: "",
-  },
   arrStudent: [
     {
       id: "6",
       name: "An",
       phoneNumber: "9049999",
       email: "annguyen@gmail.com",
+    },
+    {
+      id: "7",
+      name: "Gấm",
+      phoneNumber: "0947791696",
+      email: "gamnguyen@gmail.com",
     },
   ],
   studentEdit: {
@@ -29,53 +23,11 @@ const stateDefault = {
 
 export const studentManagementReducer = (state = stateDefault, action) => {
   switch (action.type) {
-    case "HANDLE_CHANGE": {
-      let { id, value, dataType } = action.payload;
-
-      let newValue = { ...state.studentInfo };
-      newValue[id] = value;
-      let newErrors = { ...state.errors };
-      let mess = "";
-      if (value.trim() === "") {
-        mess = id + " không được bỏ trống";
-      } else {
-        if (dataType === "name") {
-          let regexName =
-            /[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
-          if (!regexName.test(value)) {
-            mess = id + " không đúng định dạng, vui lòng thử lại";
-          }
-        }
-        if (dataType === "number") {
-          let regexNumber = /^\d+$/;
-          if (!regexNumber.test(value)) {
-            mess = id + " không đúng định dạng, vui lòng thử lại";
-          }
-        }
-        if (dataType === "email") {
-          let regexEmail =
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          if (!regexEmail.test(value)) {
-            mess = id + " không đúng định dạng, vui lòng thử lại";
-          }
-        }
-      }
-      newErrors[id] = mess;
-      state.studentInfo = newValue;
-      state.errors = newErrors;
-      return { ...state };
-    }
-    case "HANDLE_SUBMIT": {
-      let { errors } = action.payload;
-      let newErrors = { ...state.errors };
-      newErrors = errors;
-      state.errors = newErrors;
-      return { ...state };
-    }
     case "CREATE_STUDENT": {
       let { newArrStudent } = action.payload;
       let newArr = [...state.arrStudent];
       newArr.push(newArrStudent);
+      console.log(newArr);
       state.arrStudent = newArr;
       return { ...state };
     }
@@ -93,13 +45,16 @@ export const studentManagementReducer = (state = stateDefault, action) => {
       state.studentEdit = newEdit;
       return { ...state };
     }
-    // case "HANDLE_LIFECYCLE":{
-    //   let {studentInfo} = action.payload;
-    //   let newEdit = {...state.studentInfo}
-    //   newEdit = studentInfo;
-    //   state.studentInfo = newEdit;
-    //   return {...state}
-    // }
+    case "UPDATE_STUDENT": {
+      let { studentInfo } = action.payload;
+      let newStudent = [...state.arrStudent];
+      let index = newStudent.findIndex(
+        (student) => student.id === studentInfo.id
+      );
+      newStudent[index] = studentInfo;
+      state.arrStudent = newStudent;
+      return { ...state };
+    }
     default:
       return state;
   }

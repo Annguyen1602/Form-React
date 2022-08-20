@@ -2,32 +2,70 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 class FormStudent extends Component {
-  
+  state = {
+    studentInfo: {
+      id: "",
+      name: "",
+      phoneNumber: "",
+      email: "",
+    },
+    errors: {
+      id: "",
+      name: "",
+      phoneNumber: "",
+      email: "",
+    },
+  };
 
   handleChange = (e) => {
-    
-    const action = {
-      type: "HANDLE_CHANGE",
-      payload: {
-        id: e.target.id,
-        value: e.target.value,
-        dataType: e.target.getAttribute("data-type"),
-      },
-    };
-    this.props.dispatch(action);
+    let { id, value } = e.target;
+    let dataType = e.target.getAttribute("data-type");
+    let newValue = { ...this.state.studentInfo };
+    newValue[id] = value;
+    let newErrors = { ...this.state.errors };
+    let mess = "";
+    if (value.trim() === "") {
+      mess = id + " không được bỏ trống";
+    } else {
+      if (dataType === "name") {
+        let regexName =
+          /[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+        if (!regexName.test(value)) {
+          mess = id + " không đúng định dạng, vui lòng thử lại";
+        }
+      }
+      if (dataType === "number") {
+        let regexNumber = /^\d+$/;
+        if (!regexNumber.test(value)) {
+          mess = id + " không đúng định dạng, vui lòng thử lại";
+        }
+      }
+      if (dataType === "email") {
+        let regexEmail =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!regexEmail.test(value)) {
+          mess = id + " không đúng định dạng, vui lòng thử lại";
+        }
+      }
+    }
+    newErrors[id] = mess;
+    this.setState({
+      studentInfo: newValue,
+      errors: newErrors,
+    });
   };
   createStudent = (newArrStudent) => {
     const action = {
       type: "CREATE_STUDENT",
       payload: {
-        newArrStudent,
+        newArrStudent: newArrStudent,
       },
     };
     this.props.dispatch(action);
   };
   handleSubmit = (e) => {
     e.preventDefault();
-    let { studentInfo, errors } = this.props.studentInfo;
+    let { studentInfo, errors } = this.state;
     let valid = true;
     for (let key in errors) {
       if (errors[key] !== "") {
@@ -43,39 +81,29 @@ class FormStudent extends Component {
     }
     if (!valid) {
       alert("Dữ liệu không hợp lệ");
-      const action = {
-        type: "HANDLE_SUBMIT",
-        payload: {
-          errors,
-        },
-      };
-      this.props.dispatch(action);
+      this.setState({
+        errors: errors,
+      });
       return;
     }
     this.createStudent(studentInfo);
     alert("Tạo sinh viên thành công");
   };
 
-//  componentWillReceiveProps(newProps){
-//   console.log(newProps);
-//   const action ={
-//     type:"HANDLE_LIFECYCLE",
-//     payload:{
-//       studentInfo:newProps.studentEdit
-//     }
-//   }
-//   this.props.dispatch(action)
-  
-
-//  }
-// static getDerivedStateFromProps(newProps,currentState){
-//   console.log(newProps);
-//   console.log(currentState);
-//   return newProps
-// }
+  // static getDerivedStateFromProps(newProps, currentState) {
+  //   if (newProps.studentEdit.id !== currentState.studentInfo.id) {
+  //     currentState.studentInfo = newProps.studentEdit
+  //   }
+  //   return null;
+  // }
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      studentInfo: newProps.studentEdit,
+    });
+  }
 
   render() {
-    let { id, name, phoneNumber, email } = this.props.studentErrors;
+    let { id, name, phoneNumber, email } = this.state.errors;
 
     return (
       <div>
@@ -91,7 +119,7 @@ class FormStudent extends Component {
               <div className="form-group">
                 <p>Mã Sinh Viên</p>
                 <input
-                  value={this.props.studentEdit.id}
+                  value={this.state.studentInfo.id}
                   data-type="id"
                   id="id"
                   name="id"
@@ -105,7 +133,7 @@ class FormStudent extends Component {
               <div className="form-group">
                 <p>Họ tên</p>
                 <input
-                  value={this.props.studentEdit.name}
+                  value={this.state.studentInfo.name}
                   data-type="name"
                   id="name"
                   name="id"
@@ -119,7 +147,7 @@ class FormStudent extends Component {
               <div className="form-group">
                 <p>Số điện thoại</p>
                 <input
-                  value={this.props.studentEdit.phoneNumber}
+                  value={this.state.studentInfo.phoneNumber}
                   data-type="number"
                   id="phoneNumber"
                   name="id"
@@ -133,7 +161,7 @@ class FormStudent extends Component {
               <div className="form-group">
                 <p>Email</p>
                 <input
-                  value={this.props.studentEdit.email}
+                  value={this.state.studentInfo.email}
                   data-type="email"
                   id="email"
                   name="id"
@@ -148,6 +176,21 @@ class FormStudent extends Component {
             <button type="submit" className="btn btn-success">
               Thêm sinh viên
             </button>
+            <button
+              type="button"
+              className="btn btn-danger ms-2"
+              onClick={() => {
+                const action = {
+                  type: "UPDATE_STUDENT",
+                  payload: {
+                    studentInfo: this.state.studentInfo,
+                  },
+                };
+                this.props.dispatch(action);
+              }}
+            >
+              Cập nhật
+            </button>
           </div>
         </form>
       </div>
@@ -156,10 +199,7 @@ class FormStudent extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  studentErrors: state.studentManagementReducer.errors,
-  studentInfo:state.studentManagementReducer.studentInfo,
   studentEdit: state.studentManagementReducer.studentEdit,
-  
 });
 
 export default connect(mapStateToProps)(FormStudent);
