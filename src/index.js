@@ -13,8 +13,8 @@ root.render(
   <Provider store ={store}>
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<App/>}>
-          <Route path="formstudent" element={<StudentManagement/>}></Route>
+        <Route path="" element={<StudentManagement/>}>
+          {/* <Route index path="formstudent" element={<StudentManagement/>}></Route> */}
         </Route>
       </Routes>
     </BrowserRouter>

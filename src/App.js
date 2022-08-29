@@ -21,7 +21,7 @@ function App() {
         <div className="collapse navbar-collapse" id="collapsibleNavId">
           <ul className="navbar-nav me-auto mt-2 mt-lg-0">
             <li className="nav-item active">
-              <NavLink className="nav-link" to="">
+              <NavLink className="nav-link" to="/formstudent">
                 Home <span className="visually-hidden">(current)</span>
               </NavLink>
             </li>
@@ -51,19 +51,7 @@ function App() {
             </div>
           </li> */}
           </ul>
-          <form className="d-flex my-2 my-lg-0">
-            <input
-              className="form-control me-sm-2"
-              type="text"
-              placeholder="Search"
-            />
-            <button
-              className="btn btn-outline-success my-2 my-sm-0"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
+          
         </div>
       </nav>
       <div>
