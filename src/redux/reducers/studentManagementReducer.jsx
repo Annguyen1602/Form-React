@@ -19,6 +19,9 @@ const stateDefault = {
     phoneNumber: "",
     email: "",
   },
+  studentSearch: [
+    
+  ],
 };
 
 export const studentManagementReducer = (state = stateDefault, action) => {
@@ -29,7 +32,7 @@ export const studentManagementReducer = (state = stateDefault, action) => {
       newArr.push(newArrStudent);
       console.log(newArr);
       state.arrStudent = newArr;
-      return { ...state };
+      return { ...state };  
     }
     case "DELETE_STUDENT": {
       let { id } = action.payload;
@@ -53,6 +56,13 @@ export const studentManagementReducer = (state = stateDefault, action) => {
       );
       newStudent[index] = studentInfo;
       state.arrStudent = newStudent;
+      return { ...state };
+    }
+    case "SEARCH": {
+      let { arrResult } = action;
+      let arrSearch = [...state.studentSearch];
+      arrSearch = arrResult;
+      state.studentSearch = arrSearch
       return { ...state };
     }
     default:

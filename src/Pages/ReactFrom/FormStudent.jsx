@@ -62,6 +62,7 @@ class FormStudent extends Component {
       },
     };
     this.props.dispatch(action);
+    
   };
   handleSubmit = (e) => {
     e.preventDefault();
@@ -88,6 +89,9 @@ class FormStudent extends Component {
     }
     this.createStudent(studentInfo);
     alert("Tạo sinh viên thành công");
+    
+    
+    
   };
 
   // static getDerivedStateFromProps(newProps, currentState) {
